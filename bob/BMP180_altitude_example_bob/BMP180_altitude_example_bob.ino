@@ -49,10 +49,12 @@ V1.1.2 Updates for Arduino 1.6.4 5/2015
 
 #include <SFE_BMP180.h>
 #include <Wire.h>
+#include <Timer.h>  /*bob0415+*/
 
 // You will need to create an SFE_BMP180 object, here called "pressure":
 
 SFE_BMP180 pressure;
+Timer t;  /*bob0415+*/
 
 double baseline; // baseline pressure
 
@@ -81,32 +83,13 @@ void setup()
   Serial.print("baseline pressure: ");
   Serial.print(baseline);
   Serial.println(" mb");  
+
+//<bob0405+>
+  int tickEvent = t.every(2*1000, GetNewPres);
+  Serial.print("2 second tick started id=");
+  Serial.println(tickEvent);
+//<bob0405->
 }
-
-void loop()
-{
-  double a,P;
-  
-  // Get a new pressure reading:
-
-  P = getPressure();
-
-  // Show the relative altitude difference between
-  // the new reading and the baseline reading:
-
-  a = pressure.altitude(P,baseline);
-  
-  Serial.print("relative altitude: ");
-  if (a >= 0.0) Serial.print(" "); // add a space for positive numbers
-  Serial.print(a,1);
-  Serial.print(" meters, ");
-  if (a >= 0.0) Serial.print(" "); // add a space for positive numbers
-  Serial.print(a*3.28084,0);
-  Serial.println(" feet");
-  
-  delay(1000*2);  //<bob0413+> 2sec
-}
-
 
 double getPressure()
 {
@@ -166,5 +149,31 @@ double getPressure()
   else Serial.println("error starting temperature measurement\n");
 }
 
+void GetNewPres()
+{
+  double a,P;
+  
+  // Get a new pressure reading:
 
+  P = getPressure();
 
+  // Show the relative altitude difference between
+  // the new reading and the baseline reading:
+
+  a = pressure.altitude(P,baseline);
+  
+  Serial.print("relative altitude: ");
+  if (a >= 0.0) Serial.print(" "); // add a space for positive numbers
+  Serial.print(a,1);
+  Serial.print(" meters, ");
+  if (a >= 0.0) Serial.print(" "); // add a space for positive numbers
+  Serial.print(a*3.28084,0);
+  Serial.println(" feet");
+  
+//<bob0415->  delay(1000*2);  //<bob0413+> 2sec
+}
+
+void loop()
+{
+  t.update();
+}

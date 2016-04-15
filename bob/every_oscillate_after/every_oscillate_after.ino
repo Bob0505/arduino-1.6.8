@@ -14,7 +14,7 @@ void setup()
   //every(Microsecond, call_back_func);
   //every Microsecond ms do call_back_func once.
   int tickEvent = t.every(500, doSomething);
-  Serial.print("2 second tick started id=");
+  Serial.print("0.5 second tick started id=");
   Serial.println(tickEvent);
 
   pinMode(LED_L, OUTPUT);
