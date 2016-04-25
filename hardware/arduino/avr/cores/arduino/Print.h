@@ -79,6 +79,7 @@ class Print
     size_t println(double, int = 2);
     size_t println(const Printable&);
     size_t println(void);
+	int ardprt(char *, ...);	//<bob-1223+>	Add function ardprt for print decimal int/long int/decimal floating point/character/string/BIN/OCT/HEX.
 };
 
 #endif
